@@ -8,9 +8,30 @@ document.getElementById('submit').addEventListener('click', e => postForm(e));
 
 // Functions
 
+function processOptions(form) {
+    /**
+     * Recieves the form and join all the values of options 
+     * in one single array separeted by commas.
+     */
+    let optArray = [];
+
+    for (let entry of form.entries()) {
+        if (entry[0] === 'options') {
+            optArray.push(entry[1]);
+        }
+    }
+
+    form.delete('options'); // delete all options in the current form.
+
+    form.append('options', optArray.join()); // creates a new options with the values separeted by commas.
+
+    return form;
+
+}
+
 async function postForm(e) {
 
-    const form = new FormData(document.getElementById('checksform'));
+    const form = processOptions(new FormData(document.getElementById('checksform')));
 
     const response = await fetch(API_URL, {
         method: 'POST',
